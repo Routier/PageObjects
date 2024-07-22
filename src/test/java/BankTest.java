@@ -1,3 +1,5 @@
+import Data.DataHelper;
+import Pages.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,8 @@ public class BankTest {
     CardsPage cardsPage;
     DataHelper.Cards firstCardInfo;
     DataHelper.Cards secondCardInfo;
+
+    DataHelper.WrongCard wrongCard;
     int firstCardBalance;
     int secondCardBalance;
 
@@ -24,17 +28,18 @@ public class BankTest {
         secondCardInfo = DataHelper.getSecondCard();
         firstCardBalance = cardsPage.getCardBalance(0);
         secondCardBalance = cardsPage.getCardBalance(1);
+        wrongCard = DataHelper.getWrongCardNumber();
 
     }
 
     @Test
     public void transferFromSecondToFirst() {
-        var amount = "5000";
-        int s = Integer.parseInt(amount);
-        var expectedFirstCardBalance = firstCardBalance + s;
-        var expectedSecondCardBalance = secondCardBalance - s;
+        var amount = DataHelper.transferAmount(secondCardBalance);
+
+        var expectedFirstCardBalance = firstCardBalance + amount;
+        var expectedSecondCardBalance = secondCardBalance - amount;
         var transferPage = cardsPage.selectCardToTransfer(firstCardInfo);
-        transferPage.transfer(amount, secondCardInfo);
+        transferPage.transfer(String.valueOf(amount), secondCardInfo);
         cardsPage.reloadCardsPage();
         var actualFirstCardBalance = cardsPage.getCardBalance(0);
         var actualSecondCardBalance = cardsPage.getCardBalance(1);
@@ -44,12 +49,12 @@ public class BankTest {
 
     @Test
     public void transferFromFirstToSecond() {
-        var amount = "5000";
-        int s = Integer.parseInt(amount);
-        var expectedFirstCardBalance = firstCardBalance - s;
-        var expectedSecondCardBalance = secondCardBalance + s;
+        var amount = DataHelper.transferAmount(firstCardBalance);
+
+        var expectedFirstCardBalance = firstCardBalance - amount;
+        var expectedSecondCardBalance = secondCardBalance + amount;
         var transferPage = cardsPage.selectCardToTransfer(secondCardInfo);
-        transferPage.transfer(amount, firstCardInfo);
+        transferPage.transfer(String.valueOf(amount), firstCardInfo);
         cardsPage.reloadCardsPage();
         var actualFirstCardBalance = cardsPage.getCardBalance(0);
         var actualSecondCardBalance = cardsPage.getCardBalance(1);
@@ -58,8 +63,27 @@ public class BankTest {
     }
 
     @Test
-    public void wrongCardNumber() {
+    public void errorWrongFromCard(){
+        var amount = DataHelper.transferAmount(firstCardBalance);
+
         var transferPage = cardsPage.selectCardToTransfer(secondCardInfo);
-        transferPage.failToTransfer("1000", "5559000000000003");
+        transferPage.failTransfer(String.valueOf(amount),wrongCard);
+        transferPage.error("Ошибка");
     }
+
+    @Test
+    public void errorOverLimit(){
+        var amount = DataHelper.overLimitAmount(firstCardBalance);
+
+        var transferPage = cardsPage.selectCardToTransfer(secondCardInfo);
+        transferPage.transfer(String.valueOf(amount), firstCardInfo);
+        transferPage.error("Сумма перевода больше баланса карты");
+        cardsPage.reloadCardsPage();
+        var actualFirstCardBalance = cardsPage.getCardBalance(0);
+        var actualSecondCardBalance = cardsPage.getCardBalance(1);
+        assertEquals(cardsPage.getCardBalance(0), actualFirstCardBalance);
+        assertEquals(cardsPage.getCardBalance(1), actualSecondCardBalance);
+
+    }
+
 }

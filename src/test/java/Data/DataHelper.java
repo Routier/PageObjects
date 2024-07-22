@@ -1,5 +1,7 @@
-
+package Data;
 import lombok.Value;
+
+import java.util.Random;
 
 public class DataHelper {
     private DataHelper() {
@@ -22,6 +24,17 @@ public class DataHelper {
         return new Cards("0f3f5c2a-249e-4c3d-8287-09f7a039391d", "5559 0000 0000 0002");
     }
 
+    public static WrongCard getWrongCardNumber(){
+        return new WrongCard("5559 0000 0000 0003");
+    }
+
+    public static int transferAmount(int balance){
+        return new Random().nextInt(Math.abs(balance)) + 1;
+    }
+
+    public static int overLimitAmount(int balance){
+        return Math.abs(balance) + 50_000;
+    }
 
     @Value
     public static class LoginData {
@@ -39,4 +52,10 @@ public class DataHelper {
         String dataTestId;
         String cardNumber;
     }
+
+    @Value
+    public static class WrongCard{
+        String wrongCardNumber;
+    }
+
 }

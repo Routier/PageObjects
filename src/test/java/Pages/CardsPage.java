@@ -1,3 +1,5 @@
+package Pages;
+import Data.DataHelper;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -28,6 +30,7 @@ public class CardsPage {
                 .$("[data-test-id=action-deposit]").click();
         return new TransferPage();
     }
+
 
     public void reloadCardsPage() {
         reloadButton.click();

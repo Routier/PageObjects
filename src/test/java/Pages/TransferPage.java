@@ -1,3 +1,5 @@
+package Pages;
+import Data.DataHelper;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 
@@ -24,14 +26,14 @@ public class TransferPage {
         transferButton.click();
     }
 
-    public void error() {
-        errorMessage.shouldHave(text("Ошибка"), Duration.ofSeconds(15)).shouldBe(visible);
+    public void failTransfer(String amount, DataHelper.WrongCard wrongCard){
+        amountField.setValue(amount);
+        fromField.setValue(wrongCard.getWrongCardNumber());
+        transferButton.click();
     }
 
-    public void failToTransfer(String i, String number) {
-        amountField.setValue(i);
-        fromField.setValue(number);
-        transferButton.click();
-        error();
+    public void error(String errorMsg) {
+        errorMessage.shouldHave(text(errorMsg), Duration.ofSeconds(15)).shouldBe(visible);
     }
+
 }
