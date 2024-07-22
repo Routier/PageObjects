@@ -1,9 +1,8 @@
 import Data.DataHelper;
-import Pages.*;
-
+import Pages.CardsPage;
+import Pages.LoginPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -63,16 +62,16 @@ public class BankTest {
     }
 
     @Test
-    public void errorWrongFromCard(){
+    public void errorWrongFromCard() {
         var amount = DataHelper.transferAmount(firstCardBalance);
 
         var transferPage = cardsPage.selectCardToTransfer(secondCardInfo);
-        transferPage.failTransfer(String.valueOf(amount),wrongCard);
+        transferPage.failTransfer(String.valueOf(amount), wrongCard);
         transferPage.error("Ошибка");
     }
 
     @Test
-    public void errorOverLimit(){
+    public void errorOverLimit() {
         var amount = DataHelper.overLimitAmount(firstCardBalance);
 
         var transferPage = cardsPage.selectCardToTransfer(secondCardInfo);

@@ -1,4 +1,5 @@
 package Pages;
+
 import Data.DataHelper;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
@@ -26,7 +27,7 @@ public class TransferPage {
         transferButton.click();
     }
 
-    public void failTransfer(String amount, DataHelper.WrongCard wrongCard){
+    public void failTransfer(String amount, DataHelper.WrongCard wrongCard) {
         amountField.setValue(amount);
         fromField.setValue(wrongCard.getWrongCardNumber());
         transferButton.click();
